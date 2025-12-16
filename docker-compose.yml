@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # Service Base de données
+  db:
+    image: mysql:8.0
+    container_name: bibliotheque_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: bibliotheque_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      # Script d'initialisation si vous en avez un (optionnel)
+      # - ./backend/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - biblio-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # Service Backend
+  backend:
+    build: ./backend
+    container_name: bibliotheque_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=bibliotheque_db
+      - SECRET_KEY=dev-secret-key
+      - DEBUG=True
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - biblio-network
+
+  # Service Frontend
+  frontend:
+    build: ./frontend
+    container_name: bibliotheque_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api
+      # Nécessaire pour le hot-reload dans certains environnements Docker
+      - CHOKIDAR_USEPOLLING=true 
+    volumes:
+      # Monter le code source pour le hot-reload
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    depends_on:
+      - backend
+    stdin_open: true # Nécessaire pour react-scripts start
+    tty: true
+    networks:
+      - biblio-network
+
+volumes:
+  db_data:
+
+networks:
+  biblio-network:
+    driver: bridge
+
