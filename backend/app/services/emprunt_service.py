@@ -207,4 +207,80 @@ class EmpruntService:
             emprunts.append(emprunt)
         
         return emprunts
+    
+    def get_livres_populaires(self, limit=10):
+        """Récupérer les livres les plus populaires (basés sur le nombre d'emprunts)"""
+        query = """
+            SELECT 
+                l.id,
+                l.titre,
+                l.auteur,
+                l.isbn,
+                COUNT(e.id) as nombre_emprunts
+            FROM livres l
+            LEFT JOIN emprunts e ON l.id = e.livre_id
+            GROUP BY l.id, l.titre, l.auteur, l.isbn
+            ORDER BY nombre_emprunts DESC
+            LIMIT %s
+        """
+        cursor = self.db.execute_query(query, (limit,))
+        results = cursor.fetchall()
+        cursor.close()
+        
+        return results
+    
+    def get_statistiques_par_role(self):
+        """Récupérer les statistiques d'emprunts par rôle d'utilisateur"""
+        query = """
+            SELECT 
+                u.role,
+                COUNT(e.id) as nombre_emprunts,
+                COUNT(CASE WHEN e.statut = 'actif' THEN 1 END) as emprunts_actifs,
+                COUNT(CASE WHEN e.statut = 'en_retard' THEN 1 END) as emprunts_retard
+            FROM utilisateurs u
+            LEFT JOIN emprunts e ON u.id = e.utilisateur_id
+            GROUP BY u.role
+        """
+        cursor = self.db.execute_query(query)
+        results = cursor.fetchall()
+        cursor.close()
+        
+        return results
+    
+    def get_statistiques_par_mois(self, mois=12):
+        """Récupérer les statistiques d'emprunts par mois"""
+        query = """
+            SELECT 
+                DATE_FORMAT(date_emprunt, '%%Y-%%m') as mois,
+                COUNT(*) as nombre_emprunts
+            FROM emprunts
+            WHERE date_emprunt >= DATE_SUB(NOW(), INTERVAL %s MONTH)
+            GROUP BY DATE_FORMAT(date_emprunt, '%%Y-%%m')
+            ORDER BY mois DESC
+        """
+        cursor = self.db.execute_query(query, (mois,))
+        results = cursor.fetchall()
+        cursor.close()
+        
+        return results
+    
+    def get_auteurs_populaires(self, limit=10):
+        """Récupérer les auteurs les plus empruntés"""
+        query = """
+            SELECT 
+                l.auteur,
+                COUNT(e.id) as nombre_emprunts,
+                COUNT(DISTINCT l.id) as nombre_livres
+            FROM livres l
+            LEFT JOIN emprunts e ON l.id = e.livre_id
+            WHERE l.auteur IS NOT NULL
+            GROUP BY l.auteur
+            ORDER BY nombre_emprunts DESC
+            LIMIT %s
+        """
+        cursor = self.db.execute_query(query, (limit,))
+        results = cursor.fetchall()
+        cursor.close()
+        
+        return results
 
