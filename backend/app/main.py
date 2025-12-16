@@ -1,10 +1,18 @@
 """
 Point d'entrée principal de l'application backend
 """
+import logging
 from flask import Flask, jsonify
 from flask_cors import CORS
 from config import Config
-from app.routes import auth_bp, livre_bp, utilisateur_bp, emprunt_bp, dashboard_bp
+from app.routes import auth_bp, livre_bp, utilisateur_bp, emprunt_bp, dashboard_bp, notification_bp
+from app.scheduler import NotificationScheduler
+
+# Configuration du logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -18,6 +26,10 @@ app.register_blueprint(livre_bp)
 app.register_blueprint(utilisateur_bp)
 app.register_blueprint(emprunt_bp)
 app.register_blueprint(dashboard_bp)
+app.register_blueprint(notification_bp)
+
+# Initialiser le scheduler de notifications
+scheduler = NotificationScheduler()
 
 
 @app.route('/api/health', methods=['GET'])
@@ -39,4 +51,11 @@ def internal_error(error):
 
 
 if __name__ == "__main__":
-    app.run(debug=app.config['DEBUG'], host='0.0.0.0', port=5000)
+    try:
+        # Démarrer le scheduler si on n'est pas en mode test
+        if not app.config.get('TESTING', False):
+            scheduler.demarrer()
+        
+        app.run(debug=app.config['DEBUG'], host='0.0.0.0', port=5000)
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.arreter()
