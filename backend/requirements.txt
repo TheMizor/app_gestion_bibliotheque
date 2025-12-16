@@ -1,0 +1,3 @@
+# Dépendances Python pour le backend
+# À compléter selon les besoins du projet
+
