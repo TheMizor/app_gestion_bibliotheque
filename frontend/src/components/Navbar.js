@@ -14,6 +14,9 @@ function Navbar({ user, onLogout, onNavigate }) {
             <button onClick={() => onNavigate('recherche')} className="nav-link">
               Recherche
             </button>
+            <button onClick={() => onNavigate('mes-emprunts')} className="nav-link">
+              Mes Emprunts
+            </button>
             {user.role === 'bibliothecaire' && (
               <>
                 <button onClick={() => onNavigate('gestion')} className="nav-link">

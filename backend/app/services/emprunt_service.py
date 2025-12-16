@@ -120,9 +120,9 @@ class EmpruntService:
         query = """
             UPDATE emprunts 
             SET date_retour_reelle = %s, statut = %s
-            WHERE id = %s AND statut = %s
+            WHERE id = %s AND statut IN (%s, %s)
         """
-        params = (date_retour, StatutEmprunt.RETOURNE, emprunt_id, StatutEmprunt.ACTIF)
+        params = (date_retour, StatutEmprunt.RETOURNE, emprunt_id, StatutEmprunt.ACTIF, StatutEmprunt.EN_RETARD)
         
         cursor = self.db.execute_query(query, params)
         self.db.commit()

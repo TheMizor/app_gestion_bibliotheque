@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Recherche from './pages/Recherche';
 import Gestion from './pages/Gestion';
 import Dashboard from './pages/Dashboard';
+import MesEmprunts from './pages/MesEmprunts';
 import Authentification from './pages/Authentification';
 import { authService } from './services/authService';
 
@@ -44,6 +45,8 @@ function App() {
     switch (currentPage) {
       case 'recherche':
         return <Recherche />;
+      case 'mes-emprunts':
+        return <MesEmprunts />;
       case 'gestion':
         return user.role === 'bibliothecaire' ? <Gestion /> : <Recherche />;
       case 'dashboard':

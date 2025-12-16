@@ -121,13 +121,13 @@ function Dashboard() {
                 </tr>
               ) : (
                 empruntsRecents.map(emprunt => (
-                  <tr key={emprunt.id} className={isRetard(emprunt.date_retour_prevue) && !emprunt.date_retour_effective ? 'retard' : ''}>
-                    <td>{emprunt.utilisateur_nom}</td>
-                    <td>{emprunt.livre_titre}</td>
+                  <tr key={emprunt.id} className={isRetard(emprunt.date_retour_prevue) && !emprunt.date_retour_reelle ? 'retard' : ''}>
+                    <td>{emprunt.user_name || emprunt.utilisateur_nom}</td>
+                    <td>{emprunt.book_title || emprunt.livre_titre}</td>
                     <td>{formatDate(emprunt.date_emprunt)}</td>
                     <td>{formatDate(emprunt.date_retour_prevue)}</td>
                     <td>
-                      {emprunt.date_retour_effective ? (
+                      {emprunt.date_retour_reelle ? (
                         <span className="badge-retourne">Retourné</span>
                       ) : isRetard(emprunt.date_retour_prevue) ? (
                         <span className="badge-retard">En retard</span>
@@ -136,7 +136,7 @@ function Dashboard() {
                       )}
                     </td>
                     <td>
-                      {!emprunt.date_retour_effective && (
+                      {!emprunt.date_retour_reelle && (
                         <button 
                           onClick={() => handleRetour(emprunt.id)}
                           className="btn-retour"

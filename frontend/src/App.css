@@ -316,6 +316,7 @@ body {
   border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: var(--shadow);
+  border-collapse: collapse;
 }
 
 .livres-table th,
@@ -336,7 +337,7 @@ body {
 }
 
 .livres-table tr:hover {
-  background-color: var(--background-color);
+  background-color: #f1f5f9;
 }
 
 /* Modal */
@@ -573,6 +574,16 @@ body {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Styles pour Mes Emprunts */
+.row-returned {
+  opacity: 0.6;
+  background-color: #f8fafc;
+}
+
+.row-returned td {
+  color: #94a3b8;
 }
 
 /* Responsive */

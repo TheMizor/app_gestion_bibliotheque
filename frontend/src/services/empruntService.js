@@ -9,7 +9,7 @@ export const empruntService = {
 
   // Récupérer les emprunts d'un utilisateur
   getEmpruntsByUser: async (userId) => {
-    return api.get(`/loans/user/${userId}`);
+    return api.get(`/loans`);
   },
 
   // Récupérer un emprunt par son ID
