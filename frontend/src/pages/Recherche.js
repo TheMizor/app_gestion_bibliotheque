@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
+import { livreService } from '../services/livreService';
+import { empruntService } from '../services/empruntService';
 
 function Recherche() {
   const [livres, setLivres] = useState([]);
@@ -29,8 +31,7 @@ function Recherche() {
   const fetchLivres = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/livres');
-      const data = await response.json();
+      const data = await livreService.getAllLivres();
       setLivres(data);
       setFilteredLivres(data);
     } catch (error) {
@@ -42,27 +43,12 @@ function Recherche() {
 
   const handleEmprunt = async (livreId) => {
     try {
-      const response = await fetch('http://localhost:5000/api/emprunts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          livre_id: livreId
-        })
-      });
-
-      if (response.ok) {
-        alert('Emprunt enregistré avec succès !');
-        fetchLivres(); // Recharger la liste
-      } else {
-        const error = await response.json();
-        alert(`Erreur: ${error.message}`);
-      }
+      await empruntService.createEmprunt({ livre_id: livreId });
+      alert('Emprunt enregistré avec succès !');
+      fetchLivres(); // Recharger la liste
     } catch (error) {
       console.error('Erreur lors de l\'emprunt:', error);
-      alert('Erreur lors de l\'enregistrement de l\'emprunt');
+      alert(`Erreur: ${error.message || 'Erreur lors de l\'enregistrement de l\'emprunt'}`);
     }
   };
 

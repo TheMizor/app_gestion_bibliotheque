@@ -3,44 +3,19 @@ import api from './api';
 export const authService = {
   // Connexion
   login: async (email, password) => {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Erreur de connexion');
-    }
-
-    const data = await response.json();
+    // Utilisation directe de fetch pour login car pas besoin de token auth
+    const response = await api.post('/auth/login', { email, password });
     
     // Stocker le token et les informations utilisateur
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
+    localStorage.setItem('token', response.token);
+    localStorage.setItem('user', JSON.stringify(response.user));
     
-    return data;
+    return response;
   },
 
   // Inscription
   register: async (userData) => {
-    const response = await fetch('http://localhost:5000/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Erreur lors de l\'inscription');
-    }
-
-    return response.json();
+    return api.post('/auth/register', userData);
   },
 
   // Déconnexion

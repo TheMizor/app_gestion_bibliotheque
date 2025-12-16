@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
+import { livreService } from '../services/livreService';
 
 function Gestion() {
   const [livres, setLivres] = useState([]);
@@ -21,12 +22,7 @@ function Gestion() {
 
   const fetchLivres = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/livres', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
+      const data = await livreService.getAllLivres();
       setLivres(data);
     } catch (error) {
       console.error('Erreur lors du chargement des livres:', error);
@@ -36,34 +32,20 @@ function Gestion() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const url = editMode 
-      ? `http://localhost:5000/api/livres/${currentLivre.id}`
-      : 'http://localhost:5000/api/livres';
-    
-    const method = editMode ? 'PUT' : 'POST';
-
     try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(currentLivre)
-      });
-
-      if (response.ok) {
-        alert(editMode ? 'Livre modifié avec succès!' : 'Livre ajouté avec succès!');
-        setShowModal(false);
-        resetForm();
-        fetchLivres();
+      if (editMode) {
+        await livreService.updateLivre(currentLivre.id, currentLivre);
+        alert('Livre modifié avec succès!');
       } else {
-        const error = await response.json();
-        alert(`Erreur: ${error.message}`);
+        await livreService.createLivre(currentLivre);
+        alert('Livre ajouté avec succès!');
       }
+      setShowModal(false);
+      resetForm();
+      fetchLivres();
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de l\'opération');
+      alert(`Erreur: ${error.message || 'Erreur lors de l\'opération'}`);
     }
   };
 
@@ -73,23 +55,12 @@ function Gestion() {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/api/livres/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (response.ok) {
-        alert('Livre supprimé avec succès!');
-        fetchLivres();
-      } else {
-        const error = await response.json();
-        alert(`Erreur: ${error.message}`);
-      }
+      await livreService.deleteLivre(id);
+      alert('Livre supprimé avec succès!');
+      fetchLivres();
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de la suppression');
+      alert(`Erreur: ${error.message || 'Erreur lors de la suppression'}`);
     }
   };
 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
+import { dashboardService } from '../services/dashboardService';
+import { empruntService } from '../services/empruntService';
 
 function Dashboard() {
   const [stats, setStats] = useState({
@@ -21,21 +23,11 @@ function Dashboard() {
     setLoading(true);
     try {
       // Récupérer les statistiques
-      const statsResponse = await fetch('http://localhost:5000/api/dashboard/stats', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const statsData = await statsResponse.json();
+      const statsData = await dashboardService.getStats();
       setStats(statsData);
 
       // Récupérer les emprunts récents
-      const empruntsResponse = await fetch('http://localhost:5000/api/emprunts?limit=10', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const empruntsData = await empruntsResponse.json();
+      const empruntsData = await dashboardService.getRecentEmprunts();
       setEmpruntsRecents(empruntsData);
     } catch (error) {
       console.error('Erreur lors du chargement des données:', error);
@@ -46,23 +38,12 @@ function Dashboard() {
 
   const handleRetour = async (empruntId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/emprunts/${empruntId}/retour`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (response.ok) {
-        alert('Retour enregistré avec succès!');
-        fetchDashboardData();
-      } else {
-        const error = await response.json();
-        alert(`Erreur: ${error.message}`);
-      }
+      await empruntService.returnLivre(empruntId);
+      alert('Retour enregistré avec succès!');
+      fetchDashboardData();
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de l\'enregistrement du retour');
+      alert(`Erreur: ${error.message || 'Erreur lors de l\'enregistrement du retour'}`);
     }
   };
 
