@@ -13,6 +13,7 @@ function Gestion() {
     isbn: '',
     annee_publication: '',
     categorie: '',
+    nombre_exemplaires: 1,
     disponible: true
   });
 
@@ -91,6 +92,7 @@ function Gestion() {
       isbn: '',
       annee_publication: '',
       categorie: '',
+      nombre_exemplaires: 1,
       disponible: true
     });
   };
@@ -113,6 +115,7 @@ function Gestion() {
               <th>ISBN</th>
               <th>Année</th>
               <th>Catégorie</th>
+              <th>Exemplaires</th>
               <th>Statut</th>
               <th>Actions</th>
             </tr>
@@ -125,9 +128,10 @@ function Gestion() {
                 <td>{livre.isbn}</td>
                 <td>{livre.annee_publication}</td>
                 <td>{livre.categorie}</td>
+                <td>{livre.exemplaires_disponibles !== undefined ? `${livre.exemplaires_disponibles} / ${livre.nombre_exemplaires}` : 'N/A'}</td>
                 <td>
-                  <span className={livre.disponible ? 'badge-disponible' : 'badge-indisponible'}>
-                    {livre.disponible ? 'Disponible' : 'Emprunté'}
+                  <span className={livre.exemplaires_disponibles > 0 ? 'badge-disponible' : 'badge-indisponible'}>
+                    {livre.exemplaires_disponibles > 0 ? 'Disponible' : 'Indisponible'}
                   </span>
                 </td>
                 <td>
@@ -191,6 +195,16 @@ function Gestion() {
                   type="text"
                   value={currentLivre.categorie}
                   onChange={(e) => setCurrentLivre({...currentLivre, categorie: e.target.value})}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Nombre d'exemplaires *</label>
+                <input
+                  type="number"
+                  min="1"
+                  value={currentLivre.nombre_exemplaires}
+                  onChange={(e) => setCurrentLivre({...currentLivre, nombre_exemplaires: parseInt(e.target.value)})}
                   required
                 />
               </div>

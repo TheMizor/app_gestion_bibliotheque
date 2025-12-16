@@ -95,10 +95,11 @@ function Recherche() {
                 <p><strong>ISBN:</strong> {livre.isbn}</p>
                 <p><strong>Année:</strong> {livre.annee_publication}</p>
                 <p><strong>Catégorie:</strong> {livre.categorie}</p>
-                <p className={livre.disponible ? 'disponible' : 'indisponible'}>
-                  {livre.disponible ? '✓ Disponible' : '✗ Indisponible'}
+                <p><strong>Exemplaires:</strong> {livre.exemplaires_disponibles !== undefined ? `${livre.exemplaires_disponibles} / ${livre.nombre_exemplaires}` : 'N/A'}</p>
+                <p className={livre.exemplaires_disponibles > 0 ? 'disponible' : 'indisponible'}>
+                  {livre.exemplaires_disponibles > 0 ? '✓ Disponible' : '✗ Indisponible'}
                 </p>
-                {livre.disponible && (
+                {livre.exemplaires_disponibles > 0 && (
                   <button 
                     onClick={() => handleEmprunt(livre.id)}
                     className="btn-emprunt"

@@ -44,3 +44,19 @@ CREATE TABLE IF NOT EXISTS emprunts (
     INDEX idx_date_retour_prevue (date_retour_prevue)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+INSERT INTO livres (titre, auteur, isbn, nombre_exemplaires, exemplaires_disponibles) VALUES 
+    ("Harry Potter à l'école des sorciers", "J.K. Rowling", "978-2070584628", 5, 5),
+    ("Le Seigneur des Anneaux : La Communauté de l'Anneau", "J.R.R. Tolkien", "978-2266286268", 3, 3),
+    ("1984", "George Orwell", "978-2070368228", 4, 4),
+    ("Le Petit Prince", "Antoine de Saint-Exupéry", "978-2070612758", 6, 6),
+    ("L'Étranger", "Albert Camus", "978-2070360024", 4, 4),
+    ("Dune", "Frank Herbert", "978-2266283045", 3, 3),
+    ("Les Misérables", "Victor Hugo", "978-2070368229", 2, 2),
+    ("Le Rouge et le Noir", "Stendhal", "978-2070413119", 3, 3),
+    ("Madame Bovary", "Gustave Flaubert", "978-2070413118", 2, 2),
+    ("Germinal", "Émile Zola", "978-2070413117", 3, 3),
+    ("Python pour les Nuls", "John Paul Mueller", "978-2412050529", 2, 2),
+    ("Clean Code", "Robert C. Martin", "978-0132350884", 2, 2),
+    ("Design Patterns", "Erich Gamma", "978-0201633610", 1, 1),
+    ("Introduction to Algorithms", "Thomas H. Cormen", "978-0262033848", 1, 1),
+    ("The Pragmatic Programmer", "Andrew Hunt", "978-0201616224", 2, 2);
