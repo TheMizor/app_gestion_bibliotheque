@@ -41,4 +41,3 @@ function Navbar({ user, onLogout, onNavigate }) {
 }
 
 export default Navbar;
-

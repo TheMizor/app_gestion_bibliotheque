@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../App.css';
+import { authService } from '../services/authService';
 
 function Authentification({ onLogin }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,44 +17,25 @@ function Authentification({ onLogin }) {
     e.preventDefault();
     setError('');
 
-    const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-    const url = `http://localhost:5000${endpoint}`;
-
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        if (isLogin) {
-          // Connexion réussie
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('user', JSON.stringify(data.user));
-          onLogin(data.user);
-        } else {
-          // Inscription réussie, basculer vers la connexion
-          alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-          setIsLogin(true);
-          setFormData({
-            email: formData.email,
-            password: '',
-            nom: '',
-            prenom: '',
-            role: 'etudiant'
-          });
-        }
+      if (isLogin) {
+        const response = await authService.login(formData.email, formData.password);
+        onLogin(response.user);
       } else {
-        setError(data.message || 'Une erreur est survenue');
+        await authService.register(formData);
+        alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+        setIsLogin(true);
+        setFormData({
+          email: formData.email,
+          password: '',
+          nom: '',
+          prenom: '',
+          role: 'etudiant'
+        });
       }
-    } catch (error) {
-      console.error('Erreur:', error);
-      setError('Erreur de connexion au serveur');
+    } catch (err) {
+      console.error('Erreur:', err);
+      setError(err.message || 'Une erreur est survenue');
     }
   };
 
