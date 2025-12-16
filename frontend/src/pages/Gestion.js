@@ -22,10 +22,17 @@ function Gestion() {
 
   const fetchLivres = async () => {
     try {
-      const data = await livreService.getAllLivres();
-      setLivres(data);
+      const response = await livreService.getAllLivres();
+      const livresData = response.books || response || [];
+      if (Array.isArray(livresData)) {
+        setLivres(livresData);
+      } else {
+        console.error('Format de données inattendu:', response);
+        setLivres([]);
+      }
     } catch (error) {
       console.error('Erreur lors du chargement des livres:', error);
+      setLivres([]);
     }
   };
 

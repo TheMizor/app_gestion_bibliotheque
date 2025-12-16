@@ -19,10 +19,13 @@ function Recherche() {
     if (searchTerm.trim() === '') {
       setFilteredLivres(livres);
     } else {
+      // Vérifier que livres est bien un tableau avant de filtrer
+      if (!Array.isArray(livres)) return;
+      
       const filtered = livres.filter(livre =>
-        livre.titre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        livre.auteur.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        livre.isbn.includes(searchTerm)
+        (livre.titre && livre.titre.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (livre.auteur && livre.auteur.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (livre.isbn && livre.isbn.includes(searchTerm))
       );
       setFilteredLivres(filtered);
     }
@@ -31,11 +34,22 @@ function Recherche() {
   const fetchLivres = async () => {
     setLoading(true);
     try {
-      const data = await livreService.getAllLivres();
-      setLivres(data);
-      setFilteredLivres(data);
+      const response = await livreService.getAllLivres();
+      // Le backend retourne { books: [...], total: ... } ou directement [...]
+      const livresData = response.books || response || [];
+      
+      if (Array.isArray(livresData)) {
+        setLivres(livresData);
+        setFilteredLivres(livresData);
+      } else {
+        console.error('Format de données inattendu:', response);
+        setLivres([]);
+        setFilteredLivres([]);
+      }
     } catch (error) {
       console.error('Erreur lors du chargement des livres:', error);
+      setLivres([]);
+      setFilteredLivres([]);
     } finally {
       setLoading(false);
     }
@@ -43,7 +57,8 @@ function Recherche() {
 
   const handleEmprunt = async (livreId) => {
     try {
-      await empruntService.createEmprunt({ livre_id: livreId });
+      // Le backend attend 'book_id'
+      await empruntService.createEmprunt({ book_id: livreId });
       alert('Emprunt enregistré avec succès !');
       fetchLivres(); // Recharger la liste
     } catch (error) {

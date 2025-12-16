@@ -1,6 +1,11 @@
 """
 Point d'entrée principal de l'application backend
 """
+import sys
+import os
+# Ajouter le répertoire parent au PYTHONPATH pour trouver config.py
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import logging
 from flask import Flask, jsonify
 from flask_cors import CORS
@@ -18,7 +23,13 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 # Activer CORS pour permettre les requêtes depuis le frontend
-CORS(app)
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["http://localhost:3000", "http://frontend:3000"],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # Enregistrer les blueprints
 app.register_blueprint(auth_bp)

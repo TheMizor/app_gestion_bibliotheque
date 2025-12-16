@@ -1,5 +1,7 @@
 // Configuration de base pour l'API
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Utiliser le proxy relatif dans Docker, ou l'URL complète en développement local
+// Le proxy setupProxy.js intercepte les requêtes /api/* et les redirige vers le backend
+const API_BASE_URL = '/api';
 
 // Fonction utilitaire pour gérer les requêtes
 const fetchWithAuth = async (url, options = {}) => {

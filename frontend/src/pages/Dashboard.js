@@ -27,10 +27,17 @@ function Dashboard() {
       setStats(statsData);
 
       // Récupérer les emprunts récents
-      const empruntsData = await dashboardService.getRecentEmprunts();
-      setEmpruntsRecents(empruntsData);
+      const empruntsResponse = await dashboardService.getRecentEmprunts();
+      const empruntsData = empruntsResponse.loans || empruntsResponse || [];
+      
+      if (Array.isArray(empruntsData)) {
+        setEmpruntsRecents(empruntsData);
+      } else {
+        setEmpruntsRecents([]);
+      }
     } catch (error) {
       console.error('Erreur lors du chargement des données:', error);
+      setEmpruntsRecents([]);
     } finally {
       setLoading(false);
     }

@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   # Service Base de données
@@ -15,7 +14,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       # Script d'initialisation si vous en avez un (optionnel)
-      # - ./backend/schema.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/schema.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - biblio-network
     healthcheck:
@@ -42,6 +41,12 @@ services:
         condition: service_healthy
     networks:
       - biblio-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health').read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   # Service Frontend
   frontend:
@@ -50,7 +55,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:5000/api
+      - REACT_APP_API_URL=http://backend:5000/api
       # Nécessaire pour le hot-reload dans certains environnements Docker
       - CHOKIDAR_USEPOLLING=true 
     volumes:
@@ -58,7 +63,8 @@ services:
       - ./frontend/src:/app/src
       - ./frontend/public:/app/public
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     stdin_open: true # Nécessaire pour react-scripts start
     tty: true
     networks:

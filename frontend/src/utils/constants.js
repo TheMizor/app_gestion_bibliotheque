@@ -77,7 +77,8 @@ export const PAGINATION = {
 };
 
 // URLs
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Utiliser le proxy relatif - setupProxy.js intercepte /api/* et redirige vers le backend
+export const API_BASE_URL = '/api';
 
 export default {
   ROLES,

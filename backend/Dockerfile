@@ -13,6 +13,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copier le reste du code source
 COPY . .
 
+# Ajouter le répertoire courant au PYTHONPATH pour que Python trouve config.py
+ENV PYTHONPATH=/app
+
 # Exposer le port sur lequel Flask tourne
 EXPOSE 5000
 

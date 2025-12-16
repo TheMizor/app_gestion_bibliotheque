@@ -37,7 +37,8 @@ class Database:
     def get_connection(self):
         """Récupérer la connexion active"""
         if not self.connection or not self.connection.is_connected():
-            self.connect()
+            if not self.connect():
+                raise ConnectionError("Impossible de se connecter à la base de données MySQL")
         return self.connection
     
     def execute_query(self, query, params=None):
