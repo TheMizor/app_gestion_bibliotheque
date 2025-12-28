@@ -61,6 +61,13 @@ Projet réalisé par groupe de 3 étudiants maximum.
 ## Date de Rendu
 
 32/12/2025
+64: 
+65: ## Utilisateurs de Test
+66: 
+67: - **Administrateur (Bibliothécaire)** : `admin@biblio.com` / `adminpassword`
+68: - **Étudiant** : `jean.dupont@example.com` / `password123`
+69: - **Enseignant** : `pierre.dupont@example.com` / `password123`
+70:
 
 ## Notes
 

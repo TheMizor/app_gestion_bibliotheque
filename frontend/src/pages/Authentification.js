@@ -50,7 +50,7 @@ function Authentification({ onLogin }) {
     <div className="auth-container">
       <div className="auth-box">
         <h1>{isLogin ? 'Connexion' : 'Inscription'}</h1>
-        
+
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
@@ -113,7 +113,6 @@ function Authentification({ onLogin }) {
               >
                 <option value="etudiant">Étudiant</option>
                 <option value="enseignant">Enseignant</option>
-                <option value="bibliothecaire">Bibliothécaire</option>
               </select>
             </div>
           )}
