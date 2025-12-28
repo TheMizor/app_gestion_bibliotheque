@@ -21,7 +21,7 @@ class TestDashboardRoutes:
             
             mock_user_instance = MagicMock()
             mock_user_service.return_value = mock_user_instance
-            mock_user_instance.get_all.return_value = {'total': 50}
+            mock_user_instance.get_all.return_value = {'total': 50, 'utilisateurs': []}
             
             mock_emprunt_instance = MagicMock()
             mock_emprunt_service.return_value = mock_emprunt_instance

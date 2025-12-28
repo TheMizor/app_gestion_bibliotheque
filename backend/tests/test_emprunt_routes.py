@@ -25,7 +25,9 @@ class TestEmpruntRoutes:
                 'statut': StatutEmprunt.ACTIF
             }
             mock_emprunt.livre_titre = 'Test Book'
+            mock_emprunt.livre_auteur = 'Test Author'
             mock_emprunt.utilisateur_nom = 'Test User'
+            mock_emprunt.utilisateur_email = 'test@example.com'
             
             mock_instance.get_all.return_value = {
                 'emprunts': [mock_emprunt],
@@ -54,7 +56,9 @@ class TestEmpruntRoutes:
                 'statut': StatutEmprunt.ACTIF
             }
             mock_emprunt.livre_titre = 'Test Book'
+            mock_emprunt.livre_auteur = 'Test Author'
             mock_emprunt.utilisateur_nom = 'Test User'
+            mock_emprunt.utilisateur_email = 'test@example.com'
             
             mock_instance.get_by_id.return_value = mock_emprunt
             
@@ -84,7 +88,9 @@ class TestEmpruntRoutes:
                 'statut': StatutEmprunt.ACTIF
             }
             mock_emprunt.livre_titre = 'Test Book'
+            mock_emprunt.livre_auteur = 'Test Author'
             mock_emprunt.utilisateur_nom = 'Test User'
+            mock_emprunt.utilisateur_email = 'test@example.com'
             
             mock_emprunt_instance.create.return_value = mock_emprunt
             
@@ -128,7 +134,9 @@ class TestEmpruntRoutes:
                 'statut': StatutEmprunt.RETOURNE
             }
             mock_emprunt.livre_titre = 'Test Book'
+            mock_emprunt.livre_auteur = 'Test Author'
             mock_emprunt.utilisateur_nom = 'Test User'
+            mock_emprunt.utilisateur_email = 'test@example.com'
             
             mock_emprunt_instance.get_by_id.return_value = mock_emprunt
             mock_emprunt_instance.retourner.return_value = mock_emprunt

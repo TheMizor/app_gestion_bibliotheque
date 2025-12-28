@@ -59,14 +59,14 @@ class TestUtilisateurRoutes:
             response = client.get('/api/users/2', headers=auth_headers_etudiant)
             assert response.status_code == 200
     
-    def test_get_utilisateur_not_found(self, client, auth_headers_etudiant):
+    def test_get_utilisateur_not_found(self, client, auth_headers_bibliothecaire):
         """Test de récupération d'un utilisateur inexistant"""
         with patch('app.routes.utilisateur_routes.UtilisateurService') as mock_service:
             mock_instance = MagicMock()
             mock_service.return_value = mock_instance
             mock_instance.get_by_id.return_value = None
             
-            response = client.get('/api/users/999', headers=auth_headers_etudiant)
+            response = client.get('/api/users/999', headers=auth_headers_bibliothecaire)
             assert response.status_code == 404
     
     def test_create_utilisateur_success(self, client, auth_headers_bibliothecaire):
